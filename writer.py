@@ -7,7 +7,8 @@ import threading
 from enum import Enum
 import random
 from xml.dom import ValidationErr
-import pickle
+from worker import * 
+import logger
 
 from cv2 import split
 
@@ -41,8 +42,31 @@ def SlanjePaketa():
         item = (str(kod)+ "?" +str(vrijednost))
         p = Item(item)
         client.send(str.encode(str(p)))
-        print(item)
+        #print(item)
         time.sleep(2)
+
+def Kontrola():
+    while True:    
+        print("Za paljenje workera unesite 1, a za gašenje unesite 2")
+        a = input()
+        if (a == "1" or a == "2"):
+            if a == "1":
+                logger.logData("Paljenje novog workera.")
+                noviWorker = Radnik(len(listaWorkera) + 1)
+                listaWorkera.append(noviWorker)
+                print("Lista: " )
+                for r in listaWorkera:
+                    print(r)
+            elif a == "2": 
+                logger.logData("Gašenje workera.")
+                listaWorkera.pop()
+                print("Lista: " )
+                for r in listaWorkera:
+                    print(r)
+        else:
+            print("Opcija sa datim brojem ne postoji, unesite ponovo")
 
 t1 = threading.Thread(target= SlanjePaketa)
 t1.start()
+t2 = threading.Thread(target= Kontrola)
+t2.start()
