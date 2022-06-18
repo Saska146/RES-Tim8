@@ -21,7 +21,7 @@ class Item:
         self.Value = value
 
 class Description:
-    def __init__(self, id : int, items : Item, dataSet : DataSet):
+    def __init__(self, id : int, items : list[Item], dataSet : DataSet):
         self.Id = id
         self.Items = items
         self.DataSet = dataSet
@@ -36,7 +36,7 @@ class WorkerProperty:
         self.WorkerValue = workerValue
 
 class HistoricalCollection:
-    def __init__(self, workers : WorkerProperty):
+    def __init__(self, workers : list[WorkerProperty]):
         self.Workers = workers
 
 class CollectionDescription:
