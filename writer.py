@@ -1,72 +1,80 @@
-from http import client
-import socket
-import time
-from struct import Struct
-from threading import Thread
-import threading
-from enum import Enum
+import pickle
 import random
-from xml.dom import ValidationErr
-from worker import * 
+import socket
+import threading
+import time
 import logger
+import models
+from load_balancer import listaWorkera
+from worker import *
 
-from cv2 import split
+localHost = "127.0.0.1"
+port = 10254
+global client_socket
 
-code = ["CODE_ANALOG", "CODE_DIGITAL", "CODE_CUSTOM", "CODE_LIMITSET", "CODE_SINGLENOE", "CODE_MULTIPLENODE", "CODE_CONSUMER", "CODE_SOURCE"]
+def Connect():  # pragma: no cover
+    global client_socket
+    client_socket = socket.socket()
+    print('Waiting for connection')
+    while True:
+        try:
+            client_socket.connect((localHost, port))
+            break
+        except socket.error as e:
+            print('.')
 
-class Item:
-    def __init__(self, paket):
-        self.paket = paket
-
-    def __str__(self):
-        return str(self.paket)
-        
 def KonekcijaKlijent():
     clientSocket = socket.socket()
     localHost = "127.0.0.1"
     port = 10254
     print("Cekanje na konekciju")
-    try:
-        clientSocket.connect((localHost, port))
-        print("Konekcija na portu " + str(port) + " je uspjesna")
-    except socket.error as e:
-        print(str(e))
+    while True:
+        try:
+            clientSocket.connect((localHost, port))
+            print("Konekcija na portu " + str(port) + " je uspjesna")
+            break
+        except socket.error as e:
+            print(str(e))
 
     return clientSocket
 
 def SlanjePaketa():
-    client = KonekcijaKlijent()
+    Connect()
     while True:
-        vrijednost = random.randint(0, 100)
-        kod = random.choice(code)
-        item = (str(kod)+ "?" +str(vrijednost))
-        p = Item(item)
-        client.send(str.encode(str(p)))
-        #print(item)
+        rand_value = random.randint(0, 100)
+        rand_code = random.choice(models.code)
+        data = pickle.dumps(Item(CodeEnum[rand_code], rand_value))
+        client_socket.send(data)
         time.sleep(2)
 
 def Kontrola():
-    while True:    
+    while True:
         print("Za paljenje workera unesite 1, a za gašenje unesite 2")
         a = input()
         if (a == "1" or a == "2"):
             if a == "1":
                 logger.logData("Paljenje novog workera.")
-                noviWorker = Radnik(len(listaWorkera) + 1)
+                noviWorker = Worker(len(listaWorkera) + 1)
+                data = pickle.dumps(noviWorker)
+                client_socket.send(data)
                 listaWorkera.append(noviWorker)
-                print("Lista: " )
+                print("Lista: ")
                 for r in listaWorkera:
                     print(r)
-            elif a == "2": 
-                logger.logData("Gašenje workera.")
+            elif a == "2":
+                logger.logData("Gasenje workera.")
+                data = pickle.dumps('REMOVE')
+                client_socket.send(data)
                 listaWorkera.pop()
-                print("Lista: " )
+                print("Lista: ")
                 for r in listaWorkera:
                     print(r)
         else:
             print("Opcija sa datim brojem ne postoji, unesite ponovo")
 
-t1 = threading.Thread(target= SlanjePaketa)
-t1.start()
-t2 = threading.Thread(target= Kontrola)
-t2.start()
+
+if __name__ == '__main__':
+    t1 = threading.Thread(target=SlanjePaketa)
+    t1.start()
+    t2 = threading.Thread(target=Kontrola)
+    t2.start()
