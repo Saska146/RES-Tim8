@@ -12,10 +12,10 @@ localHost = "127.0.0.1"
 port = 10254
 global client_socket
 
-def Connect():  # pragma: no cover
+def Connect(): 
     global client_socket
     client_socket = socket.socket()
-    print('Waiting for connection')
+    print('\nWaiting for connection')
     while True:
         try:
             client_socket.connect((localHost, port))
