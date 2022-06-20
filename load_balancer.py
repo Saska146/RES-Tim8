@@ -12,7 +12,7 @@ buffer = [Description(1, [], CodesForDataSet(1)), Description(2, [], CodesForDat
 localHost = "127.0.0.1"
 port = 10254
 
-
+# TODO: Test
 def startujServer(host, port):
     new_socket = socket()
     try:
@@ -60,6 +60,12 @@ def zaposliWorkere():
                 worker = random.choice(listaWorkera)
                 worker.ReceiveDescriptions(desc)
                 print('Sent data to worker')
+
+# TODO: Test
+def nadjiWorkera():
+    if len(listaWorkera) > 0:
+        worker = random.choice(listaWorkera)
+        return worker
 
 
 if __name__ == '__main__':
