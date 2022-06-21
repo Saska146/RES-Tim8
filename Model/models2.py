@@ -12,6 +12,10 @@ class CodeEnum(enum.Enum):
     CODE_SOURCE = 8
 
 
+code = ["CODE_ANALOG", "CODE_DIGITAL", "CODE_CUSTOM", "CODE_LIMITSET", "CODE_SINGLENODE", "CODE_MULTIPLENODE",
+        "CODE_CONSUMER", "CODE_SOURCE"]
+
+
 class DataSet:
     def __init__(self, code1: CodeEnum, code2: CodeEnum):
         self.Code1 = code1
@@ -25,7 +29,7 @@ class Item:
 
 
 class Description:
-    def __init__(self, id: int, items: list[Item], dataSet: DataSet):
+    def __init__(self, id: int, items: list[Item], dataSet):
         self.Id = id
         self.Items = items
         self.DataSet = dataSet
@@ -48,7 +52,9 @@ class HistoricalCollection:
 
 
 class CollectionDescription:
-    def __init__(self, id: int, historicalCollection: HistoricalCollection, dataSet: DataSet):
+    def __init__(self, id,
+                 historicalCollection,
+                 dataSet):
         self.Id = id
         self.HistoricalCollection = historicalCollection
         self.DataSet = dataSet

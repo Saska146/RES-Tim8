@@ -3,8 +3,8 @@ import random
 import socket
 import threading
 import time
-import logger
-import models
+
+from Model.models2 import *
 from load_balancer import listaWorkera
 from worker import *
 
@@ -12,7 +12,8 @@ localHost = "127.0.0.1"
 port = 10254
 global client_socket
 
-def Connect(): 
+
+def Connect():  # pragma: no cover
     global client_socket
     client_socket = socket.socket()
     print('\nWaiting for connection')
@@ -20,9 +21,11 @@ def Connect():
         try:
             client_socket.connect((localHost, port))
             break
-        except socket.error as e:
+        except:
             pass
 
+
+# TODO: Test
 def KonekcijaKlijent():
     clientSocket = socket.socket()
     localHost = "127.0.0.1"
@@ -38,20 +41,22 @@ def KonekcijaKlijent():
 
     return clientSocket
 
-def SlanjePaketa():
+
+def SlanjePaketa():  # pragma: no cover
     Connect()
     while True:
         rand_value = random.randint(0, 100)
-        rand_code = random.choice(models.code)
+        rand_code = random.choice(list(code))
         data = pickle.dumps(Item(CodeEnum[rand_code], rand_value))
         client_socket.send(data)
         time.sleep(2)
 
-def Kontrola():
+
+def Kontrola():  # pragma: no cover
     while True:
         print("Za paljenje workera unesite 1, a za gašenje unesite 2")
         a = input()
-        if (a == "1" or a == "2"):
+        if a == "1" or a == "2":
             if a == "1":
                 logger.logData("Paljenje novog workera.")
                 noviWorker = Worker(len(listaWorkera) + 1)
@@ -73,7 +78,7 @@ def Kontrola():
             print("Opcija sa datim brojem ne postoji, unesite ponovo")
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     t1 = threading.Thread(target=SlanjePaketa)
     t1.start()
     t2 = threading.Thread(target=Kontrola)
