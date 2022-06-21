@@ -21,7 +21,7 @@ def Connect():
             client_socket.connect((localHost, port))
             break
         except socket.error as e:
-            print('.')
+            pass
 
 def KonekcijaKlijent():
     clientSocket = socket.socket()
