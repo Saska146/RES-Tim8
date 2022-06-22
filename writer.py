@@ -1,3 +1,4 @@
+from http import client
 import pickle
 import random
 import socket
@@ -8,12 +9,9 @@ from models2 import *
 from load_balancer import listaWorkera
 from worker import *
 
-localHost = "127.0.0.1"
-port = 10254
-global client_socket
+client_socket=socket.socket()
 
-
-def Connect_fun(local_host,portt):  
+def Connect_fun(local_host,portt):
     localHost = local_host
     port = portt
     print('\nWaiting for connection')
@@ -28,8 +26,10 @@ def Connect_fun(local_host,portt):
             client_socket.close()
             raise OverflowError("OVERFLOWERROR")
 
+
+
 def SlanjePaketa():  # pragma: no cover
-    Connect()
+    Connect_fun('127.0.0.1',10254)
     while True:
         rand_value = random.randint(0, 100)
         rand_code = random.choice(list(code))

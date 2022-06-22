@@ -57,7 +57,7 @@ def UzmiSatnicu(tip_intervala):
 
 # TODO: Test
 def ValidirajInterval(interval):
-    if re.match('^[0-9]{4}.[0-1]?[0-9].[0-1]?[0-9]$', interval):
+    if re.match('^[0-9]{4}.[0-1]?[0-9].[0-3]?[0-9]$', interval):
         return True
 
     print('Pogresan format unet.')
@@ -105,6 +105,6 @@ def IspisiPodatke(podaci, text):
 
 if __name__ == '__main__':
     # Pozivi za testiranje da li rade metode
-    #PrikaziPodatkeZaKod()
+    PrikaziPodatkeZaKod()
     PrikaziPodatkePoIstoriji()
 

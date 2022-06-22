@@ -1,6 +1,7 @@
 import pickle
 import random
 import threading
+import time
 from _thread import start_new_thread
 from socket import socket
 
@@ -62,7 +63,7 @@ def zaposliWorkere():  # pragma: no cover
         for desc in buffer:
             if len(desc.Items) > 0 and len(listaWorkera) > 0:
                 worker = random.choice(listaWorkera)
-                #ovde uspavajte nit na dve sekunde, da ne biste imali 100000 vrednosti u sekundi
+                time.sleep(2)
                 worker.ReceiveDescriptions(desc)
                 print('Sent data to worker')
 
