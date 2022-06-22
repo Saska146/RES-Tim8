@@ -13,34 +13,20 @@ port = 10254
 global client_socket
 
 
-def Connect():  # pragma: no cover
-    global client_socket
-    client_socket = socket.socket()
+def Connect_fun(local_host,portt):  
+    localHost = local_host
+    port = portt
     print('\nWaiting for connection')
     while True:
         try:
             client_socket.connect((localHost, port))
             break
-        except:
-            pass
-
-
-# TODO: Test
-def KonekcijaKlijent():
-    clientSocket = socket.socket()
-    localHost = "127.0.0.1"
-    port = 10254
-    print("Cekanje na konekciju")
-    while True:
-        try:
-            clientSocket.connect((localHost, port))
-            print("Konekcija na portu " + str(port) + " je uspjesna")
-            break
-        except socket.error as e:
-            print(str(e))
-
-    return clientSocket
-
+        except OSError:
+            client_socket.close()
+            raise OSError("Pogresna ip adresa")
+        except OverflowError:
+            client_socket.close()
+            raise OverflowError("OVERFLOWERROR")
 
 def SlanjePaketa():  # pragma: no cover
     Connect()
