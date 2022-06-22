@@ -1,36 +1,27 @@
 import re
 
-# from load_balancer import uzmiVrednsotiPoKodu, nadjiWorkera
-from Model.models import CodeEnum
+from models2 import CodeEnum
 from database import readDataByCode, readByDateAndCode
 
 
 def PrikaziPodatkeZaKod():  # pragma: no cover
     izabran_kod = IzaberiKod()
-    # worker = nadjiWorkera()
-    # TODO: Implement
-    #  podaci = worker.uzmiVrednsotiPoKodu()
     podaci = readDataByCode(izabran_kod)
     IspisiPodatke(podaci, f'Podaci za kod {izabran_kod}:')
-    for podatak in podaci:
-        print(f'\t{podatak}')
 
 
 def PrikaziPodatkePoIstoriji():  # pragma: no cover
     interval1, interval2, interval3, interval4, izabran_kod = UzmiIstorijeskeVrednsoti()
-    # worker = nadjiWorkera()
-    # TODO: Implement
-    #  podaci = worker.UzmiIstorijeskeVrednsoti()
     podaci = readByDateAndCode(interval1, interval2, interval3, interval4, izabran_kod)
     for podatak in podaci:
         print(podatak)
 
 
 def UzmiIstorijeskeVrednsoti():
-    interval1 = UzmiInterval('pocetni')
-    interval2 = UzmiInterval('krajnji')
-    interval3 = UzmiSatnicu('pocetni')
-    interval4 = UzmiSatnicu('krajnji')
+    interval1 = UzmiInterval('pocetni datum')
+    interval2 = UzmiInterval('krajnji datum')
+    interval3 = UzmiSatnicu('pocetno vreme')
+    interval4 = UzmiSatnicu('krajnjo vreme')
     izabran_kod = CodeEnum(PrikaziMeni(list(CodeEnum)))
     return interval1, interval2, interval3, interval4, izabran_kod
 
@@ -56,7 +47,7 @@ def UzmiInterval(tip_intervala):
 # TODO: Test
 def UzmiSatnicu(tip_intervala):
     while True:
-        print(f'Unesite {tip_intervala} interval u formatu YYYY.MM.DD HH:MM:SS')
+        print(f'Unesite {tip_intervala} interval u formatu HH:MM:SS')
         interval = input()
         if not ValidirajSatnicu(interval):
             continue
@@ -114,5 +105,6 @@ def IspisiPodatke(podaci, text):
 
 if __name__ == '__main__':
     # Pozivi za testiranje da li rade metode
-    # PrikaziPodatkePoIstoriji()
-    PrikaziPodatkeZaKod()
+    #PrikaziPodatkeZaKod()
+    PrikaziPodatkePoIstoriji()
+

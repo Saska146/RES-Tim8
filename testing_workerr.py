@@ -2,7 +2,7 @@ from datetime import datetime
 import unittest
 from unittest.mock import MagicMock, Mock, patch
 import database
-from models import CodeEnum, CollectionDescription, DataSet, Description, HistoricalCollection, Item, WorkerProperty
+from models2 import CodeEnum, CollectionDescription, DataSet, Description, HistoricalCollection, Item, WorkerProperty
 import worker
 
 def CheckCollectionDescriptionCorrect(d: Description, cd: CollectionDescription):

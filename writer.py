@@ -4,7 +4,7 @@ import socket
 import threading
 import time
 
-from Model.models2 import *
+from models2 import *
 from load_balancer import listaWorkera
 from worker import *
 

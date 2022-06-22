@@ -4,7 +4,7 @@ from unittest import mock
 from unittest.mock import patch, mock_open, Mock, MagicMock
 import socket
 from writer import Connect_fun
-from Model.models import Item
+from models2 import Item
 
 
 class TestWriter(unittest.TestCase):

@@ -4,7 +4,7 @@ import threading
 from _thread import start_new_thread
 from socket import socket
 
-from Model.models import Description, Item
+from models2 import Description, Item
 from worker import CodesForDataSet, Worker
 
 listaWorkera = []
@@ -62,6 +62,7 @@ def zaposliWorkere():  # pragma: no cover
         for desc in buffer:
             if len(desc.Items) > 0 and len(listaWorkera) > 0:
                 worker = random.choice(listaWorkera)
+                #ovde uspavajte nit na dve sekunde, da ne biste imali 100000 vrednosti u sekundi
                 worker.ReceiveDescriptions(desc)
                 print('Sent data to worker')
 

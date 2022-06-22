@@ -2,8 +2,8 @@ import pickle
 import socket
 from datetime import datetime
 
-import logger
-from Model.models import CodeEnum, CollectionDescription, HistoricalCollection, WorkerProperty, Description, DataSet
+import logger as logger
+from models2 import CodeEnum, CollectionDescription, HistoricalCollection, WorkerProperty, Description, DataSet
 from database import readAll, insertData, readByDateAndCode, readLastValueByCode, ModelDB
 
 global server_socket
@@ -137,38 +137,38 @@ class Worker:
         currentColDes: CollectionDescription = ConvertWorkerData(desc)
 
         for p in currentColDes.HistoricalCollection.Workers:
-            self.CDS[DataSetForCodeEnum(currentColDes.DataSet.Code1)].HistoricalCollection.Workers.append(p)
+            self.CDS[DataSetForCodeEnum(currentColDes.DataSet[0])].HistoricalCollection.Workers.append(p)
 
         currentValues: dict[CodeEnum, int] = {
             c: readLastValueByCode(c.value)[1] for c in CodeEnum
         }
-        newValues: dict[CodeEnum, int] = self.GetNewValues(DataSetForCodeEnum(currentColDes.DataSet.Code1))
-        codesCount: dict[CodeEnum, int] = self.GetCodesCount(DataSetForCodeEnum(currentColDes.DataSet.Code1))
+        newValues: dict[CodeEnum, int] = self.GetNewValues(DataSetForCodeEnum(currentColDes.DataSet[0]))
+        codesCount: dict[CodeEnum, int] = self.GetCodesCount(DataSetForCodeEnum(currentColDes.DataSet[0]))
 
-        datasetCodes = (currentColDes.DataSet.Code1, currentColDes.DataSet.Code2)
-        dataSetInt = DataSetForCodeEnum(currentColDes.DataSet.Code1)
+        datasetCodes = (currentColDes.DataSet[0], currentColDes.DataSet[1])
+        dataSetInt = DataSetForCodeEnum(currentColDes.DataSet[0])
 
         if codesCount[datasetCodes[0]] > 0 and codesCount[datasetCodes[1]] > 0:
             if datasetCodes[1] == CodeEnum.CODE_DIGITAL:
 
-                insertData(ModelDB(CodeEnum.CODE_DIGITAL, newValues[CodeEnum.CODE_DIGITAL], dataSetInt,
-                                   DataSet(CodeEnum.CODE_ANALOG, CodeEnum.CODE_DIGITAL)))
+                insertData(ModelDB(CodeEnum.CODE_DIGITAL.value, newValues[CodeEnum.CODE_DIGITAL], datetime.now(),
+                                   dataSetInt))
                 logger.logData('Worker {id} wrote DIGITAL code value to Database'.format(id=self.id))
 
                 if Deadband(currentValues[CodeEnum.CODE_ANALOG], newValues[CodeEnum.CODE_ANALOG]):
                     insertData(ModelDB(1,
                                        newValues[CodeEnum.CODE_ANALOG],
-                                       dataSetInt,
-                                       DataSet(CodeEnum.CODE_ANALOG, CodeEnum.CODE_DIGITAL)))
+                                       datetime.now(),
+                                       dataSetInt))
                     logger.logData('Worker {id} wrote ANALOG code value to Database'.format(id=self.id))
             else:
                 for c in datasetCodes:
                     if Deadband(currentValues[c], newValues[c]):
-                        insertData(ModelDB(c.value, newValues[c], dataSetInt, DataSetForCodeEnum(c)))
+                        insertData(ModelDB(c.value, newValues[c], datetime.now(), dataSetInt))
                         logger.logData(
                             'Worker {id} wrote {code} code value to Database'.format(id=self.id, code=c.value))
 
-            self.CDS[DataSetForCodeEnum(currentColDes.DataSet.Code1)].HistoricalCollection.Workers.clear()
+            self.CDS[DataSetForCodeEnum(currentColDes.DataSet[0])].HistoricalCollection.Workers.clear()
             logger.logData('Worker {id} cleared internal data for dataset after insert to database'.format(id=self.id))
 
 

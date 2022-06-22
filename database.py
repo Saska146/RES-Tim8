@@ -92,7 +92,9 @@ def MapDataset(code_id):
     elif 7 <= code_id <= 8:
         return 4
 
-# if __name__ == '__main__':
+
+if __name__ == '__main__':
+    print(readLastValueByCode(1))
 # model = ModelDB(4,323,datetime.now(),2)
 # insertData(model)
 # print(readByDateAndCode("2022-06-12 19:15:47","2022-06-12 19:45:00",4))
